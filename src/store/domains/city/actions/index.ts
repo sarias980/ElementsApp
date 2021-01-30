@@ -25,3 +25,8 @@ const getCites = () => {
 const invalidateCitiesState = (): InvalidateCitiesStateAction => {
     return {type: CITY_ACTIONS.INVALIDATE_CITIES_STATE};
 };
+
+export {
+    getCites,
+    invalidateCitiesState
+};

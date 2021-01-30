@@ -21,9 +21,7 @@ export default function App() {
         (async () => {
             try {
                 // initialize store
-                console.log("initialize store");
                 const configuredStore = await configureStore();
-                console.log(configuredStore);
                 // @ts-ignore
                 setStore(configuredStore);
                 logger.debug('Initialized store');

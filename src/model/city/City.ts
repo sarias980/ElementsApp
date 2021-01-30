@@ -4,3 +4,4 @@ type City = {
     photoURL: string;
     data: CityData[];
 }
+export default City;
