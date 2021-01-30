@@ -9,6 +9,8 @@ import Navigation from './src/navigation';
 import {RESET_STATE} from "@redux-offline/redux-offline/lib/constants";
 import {Root, StyleProvider} from 'native-base';
 import configureStore from './src/store';
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 
 
 const logger = Logger.get('APP');
@@ -20,6 +22,12 @@ export default function App() {
     useEffect(() => {
         (async () => {
             try {
+                await Font.loadAsync({
+                    Roboto: require('native-base/Fonts/Roboto.ttf'),
+                    Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+                    ...Ionicons.font,
+                });
+
                 // initialize store
                 const configuredStore = await configureStore();
                 // @ts-ignore
