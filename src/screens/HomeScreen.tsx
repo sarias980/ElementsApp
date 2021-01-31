@@ -54,7 +54,7 @@ export default function HomeScreen( {navigation}: StackScreenProps<RootStackPara
                     }
                 />
             ) : (
-                <Spinner style={{marginTop: '25%'}}/>
+                <Spinner style={{marginTop: '15%'}}/>
             )}
         </View>
     );
