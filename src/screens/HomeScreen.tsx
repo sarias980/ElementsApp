@@ -1,35 +1,44 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, ListRenderItemInfo, ScrollView, StyleSheet, TouchableHighlight} from 'react-native';
+import {FlatList, RefreshControl, StyleSheet, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {Text, View} from '../components/Themed';
 import {AppState} from '../store/state';
 import City from '../model/city/City';
 import {getCites} from '../store/domains/city/actions/index'
-import {List, ListItem, Spinner} from "native-base";
+import {View, Spinner} from "native-base";
 import CityListCard from "../components/CityListCard/CityListCard";
+import {
+    useNavigation
+} from '@react-navigation/native';
+import {StackScreenProps} from "@react-navigation/stack";
+import {RootStackParamList} from "../../types";
 
-export default function HomeScreen() {
+const orderName = (cities : City[])=> {
+    return cities.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+};
+
+export default function HomeScreen( {navigation}: StackScreenProps<RootStackParamList, 'Root'>) {
     const dispatch = useDispatch();
+    //const navigation = useNavigation();
+    const [refreshing, setRefreshing] = React.useState(false);
 
     const cities = useSelector<AppState, City[]>(
-        state => state.cities.city
+        state => orderName(state.cities.city)
     ) || [];
-
-    console.log(cities.length);
 
     useEffect(() => {
         dispatch(getCites());
     }, [dispatch]);
 
-    const renderItem = city => {
+    const renderItem = (city: City) => {
         return (
-            <TouchableHighlight
-                key={city.id}
-                onPress={() => {
-                }}>
+            <TouchableOpacity onPress={() => navigation.navigate('CityDetails', {city: city})}>
                 <CityListCard city={city}/>
-            </TouchableHighlight>
+            </TouchableOpacity>
         );
+    }
+
+    const reload = () =>  {
+        dispatch(getCites());
     }
 
     return (
@@ -40,6 +49,9 @@ export default function HomeScreen() {
                     renderItem={({item}) => renderItem(item)}
                     keyExtractor={(item) => item.id.toString()}
                     style={styles.separator}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={reload} />
+                    }
                 />
             ) : (
                 <Spinner style={{marginTop: '25%'}}/>
